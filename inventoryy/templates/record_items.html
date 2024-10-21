@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Record Items</title>
+    <style>
+                body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #7267bd, #8374e3); /* Gradient with your main color */
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+        }
+
+        
+
+        header {
+    background-color: #483D8B; /* Main color for the header */
+    padding: 20px 30px; /* More padding for better spacing */
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 0 0 10px 10px; /* Rounded corners at the bottom */
+}
+
+.logo {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #FFFFFF; /* White text for better contrast */
+}
+
+nav {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center; /* Center the navigation items */
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 15px;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #FFFFFF; /* White text for better contrast */
+    padding: 8px 12px;
+    transition: background-color 0.3s, color 0.3s;
+    border-radius: 5px;
+}
+
+nav ul li a:hover {
+    background-color: #6A5ACD; /* Light Slate Blue on hover */
+    color: white; /* Text color on hover */
+}
+
+.logout {
+    margin-left: auto; /* Pushes the Logout link to the right */
+}
+
+.logout a {
+    background-color: #6A5ACD; /* Light Slate Blue for logout button */
+    color: white; /* White text color */
+    border: none; /* No border for a cleaner look */
+    padding: 10px 15px; /* Button padding */
+    border-radius: 8px; /* Rounded corners */
+    text-decoration: none; /* Remove underline */
+    font-weight: bold; /* Bold text */
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.logout a:hover {
+    background-color: #2e2a5c; /* Slightly darker on hover */
+    transform: scale(1.05); /* Slightly enlarge the button */
+}
+        .category-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            width: 45%;
+            vertical-align: top;
+        }
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 5px 0;
+        }
+        .item button {
+            margin-left: 10px;
+        }
+        .datetime {
+            margin: 10px 0;
+            font-size: 1.2em;
+        }
+
+        @media print {
+        body * {
+            visibility: hidden;  /* Hide everything */
+        }
+        #printable-section, #printable-section * {
+            visibility: visible;  /* Only show printable section */
+        }
+        #printable-section {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
+    }
+
+h1,
+.datetime {
+    text-align: center;
+}
+
+h2, h3 {
+    color: #483D8B;
+    text-align: center;
+}
+
+.content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    max-width: 200%;
+    margin: 5%;
+
+}
+
+/* Add this CSS to your existing styles */
+.category-container {
+    display: flex;               /* Enable flexbox */
+    flex-wrap: wrap;            /* Allow items to wrap to the next line if necessary */
+    justify-content: space-between; /* Distribute space evenly */
+}
+
+.category-box {
+    flex: 1; /* Allow boxes to grow equally */
+    max-width: 45%; /* Set a maximum width for each box */
+    margin: 10px; /* Add space around each box */
+    padding: 20px; /* Add padding inside the box */
+    border: 1px solid #ccc; /* Optional: Add a border */
+    border-radius: 8px; /* Optional: Round the corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for depth */
+    background-color: #fff; /* Optional: Background color */
+}
+
+.category-box h2 {
+    margin-bottom: 10px;
+    color: #483D8B;
+    border-bottom: 2px solid #483D8B;
+    padding-bottom: 5px;
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.item p {
+    margin: 0;
+}
+
+button {
+    background-color: #483D8B;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #2d1e5f;
+}
+
+
+/* Selected Items Section */
+#selected-items {
+    margin: 20px 0;
+    border: 1px solid #ddd;
+    padding: 10px;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+#payment-method {
+    text-align: center;
+}
+
+/* Total Price Section */
+#total-price {
+    font-weight: bold;
+    font-size: 1.5em;
+    color: #ff4500;
+}
+
+/* Payment Method Dropdown */
+select {
+    padding: 5px;
+    font-size: 1em;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* Printable Section */
+#printable-section {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+}
+
+#printable-section h2, #printable-section h3 {
+    margin: 0;
+}
+
+@media print {
+    /* Hide everything but the printable section for printing */
+    body * {
+        visibility: hidden;
+    }
+
+    #printable-section, #printable-section * {
+        visibility: visible;
+    }
+
+    #printable-section {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+    }
+
+    /* Styling for print layout */
+    .item, .selected-item {
+        font-size: 0.9em;
+        margin: 5px 0;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #print-total-price {
+        font-size: 1.2em;
+        font-weight: bold;
+    }
+}
+
+    @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">ShopEase</div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'staff_homepage' staff_id%}">Home</a></li>
+                <li><a href="{% url 'record_items' staff_id%}">Record Items</a></li>
+                <li><a href="{% url 'transaction_history' staff_id%}">Transaction History</a></li>
+                <li><a href="{% url 'inventory' staff_id%}">Inventory</a></li>
+            </ul>
+        </nav>
+        <div class="logout">
+            <a href="{% url 'login' %}">Logout</a>
+        </div>
+    </header>
+
+        <h1>Record Items</h1>
+        <div class="datetime" id="current-datetime"></div>
+
+    
+    <div class="content">
+        <!-- Snacks Category -->
+        <div class="category-box">
+            <h2>Snacks</h2>
+            {% for item in items %}
+                {% if item.category == "snack" %}
+                    <div class="item">
+                        <p>Name: {{ item.item_name }}</p>
+                        <p>Price: RM {{ item.price }}</p>
+                        <button onclick="selectItem('{{ item.item_name }}', {{ item.price }}, {{ item.id }})">Select</button>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- Beverages Category -->
+        <div class="category-box">
+            <h2>Beverages</h2>
+            {% for item in items %}
+                {% if item.category == "beverage" %}
+                    <div class="item">
+                        <p>Name: {{ item.item_name }}</p>
+                        <p>Price: RM {{ item.price }}</p>
+                        <button onclick="selectItem('{{ item.item_name }}', {{ item.price }}, {{ item.id }})">Select</button>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        
+        <!-- Selected Items and Total Price -->
+        <h2>Selected Items</h2>
+        <div id="selected-items"></div>
+
+        <h3>Total Price: RM <span id="total-price">0.00</span></h3>
+
+        <!-- Payment Method Dropdown -->
+        <h3>Select Payment Method:</h3>
+        <select id="payment-method">
+            <option value="cash">Cash</option>
+            <option value="transfer">Transfer</option>
+        </select>
+
+        <!-- Pay Button -->
+        <button id="pay-btn" onclick="pay()">Pay</button> <!-- Pay button -->
+        
+        <!-- Printable Section (Initially Hidden) -->
+        <div id="printable-section" style="display:none;">
+            <h2>Transaction Receipt</h2>
+            <div id="print-selected-items"></div>
+            <h3>Total Price: RM <span id="print-total-price">0.00</span></h3>
+        </div>
+    </div>
+
+    <script>
+        let selectedItems = [];
+        let totalPrice = 0;  // Initialize total price globally
+
+        // Function to select item and add it to the selected items list
+        function selectItem(name, price, id) {
+            const quantity = prompt("Enter the quantity for " + name + ":");
+            if (quantity && !isNaN(quantity)) {
+                const itemTotal = price * quantity;
+                totalPrice += itemTotal;
+                document.getElementById("total-price").innerText = totalPrice.toFixed(2);
+
+                const selectedItemsDiv = document.getElementById("selected-items");
+                selectedItemsDiv.innerHTML += `<p>${name} x ${quantity} = RM ${itemTotal.toFixed(2)}</p>`;
+
+                // Add selected item to the list with item ID, name, price, and quantity
+                selectedItems.push({ 'id': id, 'name': name, 'price': price, 'quantity': quantity });
+            } else {
+                alert("Please enter a valid quantity.");
+            }
+        }
+
+        // Function to handle the payment process
+        function pay() {
+    if (selectedItems.length === 0) {
+        alert("No items selected.");
+        return;
+    }
+
+    const staffId = "{{ staff_id }}";
+    const paymentMethod = document.getElementById("payment-method").value;  // Get selected payment method
+
+    const payload = {
+        staff_id: staffId,
+        items: selectedItems,
+        total_price: totalPrice.toFixed(2),
+        payment_method: paymentMethod  // Include the payment method in the payload
+    };
+
+    fetch("{% url 'save_transaction' %}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: JSON.stringify(payload)
+    }).then(response => response.json())
+      .then(data => {
+          if (data.success) {
+              alert("Transaction saved successfully!");
+              askToPrint();
+          } else {
+              alert("Failed to save the transaction: " + data.error);
+          }
+      })
+      .catch(error => {
+          console.error("Error:", error);
+      });
+}
+
+
+        // Function to update the date and time every second
+        function updateDateTime() {
+    const now = new Date();
+    const options = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit', 
+        hour12: true 
+    };
+    
+    // Use 'en-MY' for Malaysian locale
+    document.getElementById('current-datetime').innerText = now.toLocaleString('en-MY', options);
+}
+
+
+        setInterval(updateDateTime, 1000); // Update the time every second
+        updateDateTime(); // Initial call to display the time immediately
+
+        // Function to ask if the user wants to print the transaction and print selected items only
+        function askToPrint() {
+            const printConfirmation = confirm("Do you want to print? (yes / no)");
+            if (printConfirmation) {
+                // Copy the selected items and total price into the printable section
+                const printSelectedItemsDiv = document.getElementById("print-selected-items");
+                const selectedItemsDiv = document.getElementById("selected-items").innerHTML; // Get the existing selected items HTML
+
+                printSelectedItemsDiv.innerHTML = selectedItemsDiv;  // Copy the items to the printable section
+
+                const totalPrice = document.getElementById("total-price").innerText;  // Get total price
+                document.getElementById("print-total-price").innerText = totalPrice;  // Set the total price in the printable section
+
+                // Show the printable section, then trigger print
+                document.getElementById("printable-section").style.display = "block";
+
+                // Print only the printable section
+                window.print();
+
+                // After printing, reload the page or hide the printable section again
+                window.location.reload();
+            } else {
+                window.location.reload();  // Reload the page if the user doesn't want to print
+            }
+        }
+    </script>
+</body>
+</html>

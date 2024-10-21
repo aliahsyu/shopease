@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #7267bd, #8374e3); /* Gradient with your main color */
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+        }
+
+        header {
+            background-color: #483D8B; /* Main color for the header */
+            padding: 20px 30px; /* More padding for better spacing */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 0 0 10px 10px; /* Rounded corners at the bottom */
+        }
+
+        .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #FFFFFF; /* White text for better contrast */
+        }
+
+        nav {
+            display: flex;
+            flex-grow: 1;
+            justify-content: center; /* Center the navigation items */
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 15px;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #FFFFFF; /* White text for better contrast */
+            padding: 8px 12px;
+            transition: background-color 0.3s, color 0.3s;
+            border-radius: 5px;
+        }
+
+        nav ul li a:hover {
+            background-color: #6A5ACD; /* Light Slate Blue on hover */
+            color: white; /* Text color on hover */
+        }
+
+        .logout {
+            margin-left: auto; /* Pushes the Logout link to the right */
+        }
+
+        .logout a {
+            background-color: #6A5ACD; /* Light Slate Blue for logout button */
+            color: white; /* White text color */
+            border: none; /* No border for a cleaner look */
+            padding: 10px 15px; /* Button padding */
+            border-radius: 8px; /* Rounded corners */
+            text-decoration: none; /* Remove underline */
+            font-weight: bold; /* Bold text */
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .logout a:hover {
+            background-color: #2e2a5c; /* Slightly darker on hover */
+            transform: scale(1.05); /* Slightly enlarge the button */
+        }
+
+        .container {
+            margin: 20px;
+            flex-grow: 1;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            color: #483D8B; /* Same as header color for consistency */
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #483D8B;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        .print-button {
+            padding: 10px 20px;
+            background-color: #6A5ACD;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .print-button:hover {
+            background-color: #2e2a5c;
+            transform: scale(1.05);
+        }
+
+        @media print {
+            body {
+                background: white; /* Remove background gradient for print */
+            }
+
+            .print-button, header {
+                display: none; /* Hide the print button and header during print */
+            }
+
+            h2 {
+                margin-top: 0; /* Ensure title doesn't overlap with anything */
+                color: black; /* Ensure title is visible in print */
+            }
+
+            table {
+                width: 100%; /* Ensure the table uses full width during print */
+            }
+        }
+    </style>
+
+    <script>
+        function printInventory() {
+            window.print();
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="logo">ShopEase</div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'staff_homepage' staff_id%}">Home</a></li>
+                <li><a href="{% url 'record_items' staff_id%}">Record Items</a></li>
+                <li><a href="{% url 'transaction_history' staff_id%}">Transaction History</a></li>
+                <li><a href="{% url 'inventory' staff_id%}">Inventory</a></li>
+            </ul>
+        </nav>
+        <div class="logout">
+            <a href="{% url 'login' %}">Logout</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2>Updated Inventory</h2>
+        <!-- Low Stock Alert Section -->
+        {% if low_stock_items %}
+            <div class="alert alert-warning" role="alert">
+                <h4 class="alert-heading">Low Stock Alert</h4>
+                <p>The following items have low stock (below 30):</p>
+                <ul>
+                    {% for item in low_stock_items %}
+                        <li>{{ item.item_name }} (Stock: {{ item.stock_quantity }})</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <!-- Inventory Table -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Item ID</th>
+                    <th>Item Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Stock Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.item_id }}</td>
+                    <td>{{ item.item_name }}</td>
+                    <td>{{ item.category }}</td>
+                    <td>{{ item.price }}</td>
+                    <td>{{ item.stock_quantity }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button class="print-button" onclick="printInventory()">Print</button>
+    </div>
+
+    <script>
+        window.onload = function() {
+            // Get the low stock items info from the Django template
+            const lowStockInfo = {{ low_stock_info|safe }};
+            
+            if (lowStockInfo.length > 0) {
+                let alertMessage = "Warning! The following items have stock below 30:\n\n";
+                
+                // Append each item name and its stock to the alert message
+                for (let i = 0; i < lowStockInfo.length; i++) {
+                    alertMessage += "- " + lowStockInfo[i].name + " (Current stock: " + lowStockInfo[i].stock + ")\n";
+                }
+                
+                alert(alertMessage);
+            }
+        };
+    </script>
+</body>
+</html>

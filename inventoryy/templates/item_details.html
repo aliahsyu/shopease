@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #7267bd, #8374e3); /* Gradient with your main color */
+            height: 100vh;
+            margin: 0;
+        }
+
+        header {
+            background-color: #483D8B; /* Main color for the header */
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 0 0 10px 10px;
+        }
+
+        .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #FFFFFF;
+        }
+
+        nav {
+            display: flex;
+            flex-grow: 1;
+            justify-content: center;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 15px;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #FFFFFF;
+            padding: 8px 12px;
+            transition: background-color 0.3s, color 0.3s;
+            border-radius: 5px;
+        }
+
+        nav ul li a:hover {
+            background-color: #6A5ACD;
+        }
+
+        .logout {
+            margin-left: auto;
+        }
+
+        .logout a {
+            background-color: #6A5ACD;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .logout a:hover {
+            background-color: #2e2a5c;
+            transform: scale(1.05);
+        }
+
+        h2, h3 {
+            color: #483D8B;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        .btn-update {
+            background-color: #FFA500;
+            color: white;
+        }
+
+        .btn-update:hover {
+            background-color: #cc8400;
+        }
+
+        .btn-delete {
+            background-color: #FF6347;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background-color: #cc4b32;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .form-container input[type="submit"] {
+            background-color: #483D8B;
+            color: white;
+            border-radius: 8px;
+        }
+
+        .form-container input[type="submit"]:hover {
+            background-color: #2e2a5c;
+        }
+    </style>
+</head>
+<body>
+    <header> 
+        <div class="logo">ShopEase</div>
+        <nav>
+            <ul class="d-flex justify-content-between">
+                <li><a href="{% url 'manager_homepage' manager_id %}">Home</a></li>
+                <li><a href="{% url 'staff_details' manager_id %}">Staff</a></li>
+                <li><a href="{% url 'item_details' manager_id %}">Item Details</a></li>
+                <li><a href="{% url 'supplier_details' manager_id %}">Supplier Details</a></li>
+                <li><a href="{% url 'generate_report' manager_id %}">Report</a></li>
+            </ul>
+        </nav>
+        <div class="logout">
+            <a href="{% url 'login' %}">Logout</a>
+        </div>
+    </header>
+
+    <div class="container mt-5">
+
+        <!-- Low Stock Alert Section -->
+        {% if low_stock_items %}
+            <div class="alert alert-warning" role="alert">
+                <h4 class="alert-heading">Low Stock Alert</h4>
+                <p>The following items have low stock (below 30):</p>
+                <ul>
+                    {% for item in low_stock_items %}
+                        <li>{{ item.item_name }} (Stock: {{ item.stock_quantity }})</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <div class="form-container">
+            <h3>Add New Item</h3>
+            <form method="POST" action="{% url 'item_details' manager_id %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="item_id" class="form-label">Item ID:</label>
+                    <input type="text" class="form-control" name="item_id" required>
+                </div>
+                <div class="mb-3">
+                    <label for="item_name" class="form-label">Item Name:</label>
+                    <input type="text" class="form-control" name="item_name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="category" class="form-label">Category:</label>
+                    <select class="form-select" id="category" name="category" required>
+                        <option value="">Select Category</option>
+                        <option value="snack">Snack</option>
+                        <option value="beverage">Beverage</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price:</label>
+                    <input type="text" class="form-control" name="price" required>
+                </div>
+                <div class="mb-3">
+                    <label for="stock_quantity" class="form-label">Stock Quantity:</label>
+                    <input type="number" class="form-control" name="stock_quantity" required>
+                </div>
+                <input type="submit" class="btn btn-primary" value="Add Item">
+            </form>
+        </div>
+
+        <table class="table table-bordered table-hover mt-5">
+            <thead class="table-dark">
+                <tr>
+                    <th>No.</th>
+                    <th>Item ID</th>
+                    <th>Item Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Stock Quantity</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.item_id }}</td>
+                    <td>{{ item.item_name }}</td>
+                    <td>{{ item.category }}</td>
+                    <td>{{ item.price }}</td>
+                    <td>{{ item.stock_quantity }}</td>
+                    <td>
+                        <a href="{% url 'update_item' item.item_id manager_id %}" class="btn btn-update">Update</a>
+                        <a href="{% url 'delete_item' item.item_id manager_id %}" class="btn btn-delete">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

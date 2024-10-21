@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up Page</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #483D8B, #6A5ACD);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .signup-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            width: 350px;
+            text-align: center;
+            animation: fadeIn 1.2s ease-in-out;
+        }
+        h1 {
+            color: #483D8B;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9em;
+            color: #333;
+        }
+        input, select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: 0.3s;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #483D8B;
+            box-shadow: 0 0 8px rgba(72, 61, 139, 0.5);
+        }
+        .btn {
+            background-color: #483D8B;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 1.1em;
+            transition: background-color 0.3s, transform 0.3s;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background-color: #2e2a5c;
+            transform: translateY(-3px);
+        }
+        .error {
+            color: #ff4d4d;
+            margin-top: 10px;
+            font-size: 0.9em;
+            animation: shake 0.5s;
+        }
+        .signup-link {
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+        .signup-link a {
+            color: #6A5ACD;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .signup-link a:hover {
+            color: #483D8B;
+        }
+        .error {
+    color: red;
+    font-weight: bold;
+}
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            20%, 60% {
+                transform: translateX(-10px);
+            }
+            40%, 80% {
+                transform: translateX(10px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <h1>Create an Account</h1>
+        
+        <!-- Display error or success message -->
+        {% if message %}
+            <p class="error">{{ message }}</p>
+        {% endif %}
+    
+        <form method="post">
+            {% csrf_token %}
+            <label for="username">Name:</label>
+            <input type="text" id="username" name="username" placeholder="Enter your name" required>
+    
+            <label for="user_id">ID:</label>
+            <input type="text" id="user_id" name="user_id" placeholder="Enter your ID" required>
+    
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Create a password" required>
+    
+            <label for="role">Role:</label>
+            <select id="role" name="role" required>
+                <option value="">Select role</option>
+                <option value="staff">Staff</option>
+                <option value="manager">Manager</option>
+            </select>
+    
+            <button type="submit" class="btn">Sign Up</button>
+        </form>
+    
+        <div class="signup-link">
+            Already have an account? <a href="{% url 'login' %}">Login</a>
+        </div>
+    </div>
+    </body>
+    </html>

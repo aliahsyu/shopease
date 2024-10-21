@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"> 
+    <title>Staff Homepage</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #7267bd, #8374e3); /* Gradient with your main color */
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+        }
+
+        header {
+    background-color: #483D8B; /* Main color for the header */
+    padding: 20px 30px; /* More padding for better spacing */
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 0 0 10px 10px; /* Rounded corners at the bottom */
+}
+
+.logo {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #FFFFFF; /* White text for better contrast */
+}
+
+nav {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center; /* Center the navigation items */
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 15px;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #FFFFFF; /* White text for better contrast */
+    padding: 8px 12px;
+    transition: background-color 0.3s, color 0.3s;
+    border-radius: 5px;
+}
+
+nav ul li a:hover {
+    background-color: #6A5ACD; /* Light Slate Blue on hover */
+    color: white; /* Text color on hover */
+}
+
+.logout {
+    margin-left: auto; /* Pushes the Logout link to the right */
+}
+
+.logout a {
+    background-color: #6A5ACD; /* Light Slate Blue for logout button */
+    color: white; /* White text color */
+    border: none; /* No border for a cleaner look */
+    padding: 10px 15px; /* Button padding */
+    border-radius: 8px; /* Rounded corners */
+    text-decoration: none; /* Remove underline */
+    font-weight: bold; /* Bold text */
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.logout a:hover {
+    background-color: #2e2a5c; /* Slightly darker on hover */
+    transform: scale(1.05); /* Slightly enlarge the button */
+}
+
+        .content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .welcome-box {
+            background-color: #e5e1e1;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .welcome-box h1 {
+            font-size: 2.5em;
+            color: #483D8B; /* Main color */
+            margin-bottom: 10px;
+        }
+
+        .welcome-box p {
+            font-size: 1.2em;
+            color: #6A5ACD; /* Use a contrasting color for text */
+        }
+
+        .box-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 1200px; /* Limit the max width of the boxes */
+            margin: 20px 0;
+            flex-wrap: wrap; /* Allow wrapping of boxes on smaller screens */
+        }
+
+        .box {
+            background-color: rgb(241, 235, 235);
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            flex: 1; /* Allows boxes to grow */
+            margin: 10px; /* Space between boxes */
+            min-width: 200px; /* Minimum width for boxes */
+            transition: transform 0.3s;
+        }
+
+        .box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .box i {
+            font-size: 40px; /* Icon size */
+            color: #483D8B; /* Main color */
+            margin-bottom: 10px; /* Space between icon and text */
+        }
+
+        .btn {
+            background-color: #483D8B; /* Main color */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: background-color 0.3s, transform 0.3s;
+            margin-top: 15px; /* Space above the button */
+        }
+
+        .btn:hover {
+            background-color: #2e2a5c; /* Slightly darker on hover */
+            transform: translateY(-3px);
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">ShopEase</div>
+    <nav>
+        <ul>
+            <li><a href="{% url 'staff_homepage' userId%}">Home</a></li>
+            <li><a href="{% url 'record_items' userId%}">Record Items</a></li>
+            <li><a href="{% url 'transaction_history' userId%}">Transaction History</a></li>
+            <li><a href="{% url 'inventory' userId%}">Inventory</a></li>
+        </ul>
+    </nav>
+    <div class="logout">
+        <a href="{% url 'login' %}">Logout</a>
+    </div>
+</header>
+
+
+
+
+<div class="content">
+    <div class="welcome-box">
+        <h1>Welcome, {{ userId }}</h1>
+        <p>Here you can manage your items and transactions.</p>
+    </div>
+    <div class="box-container">
+        <div class="box">
+            <h2>Record Items</h2>
+            <i class="fas fa-cart-plus"></i>
+            <p>Record customer purchases.</p>
+            <button class="btn" onclick="location.href='{% url 'record_items' userId %}'">View</button>
+        </div>
+        <div class="box">
+            <h2>Transaction History</h2>
+            <i class="fas fa-receipt"></i>
+            <p>Review all past transactions.</p>
+            <button class="btn" onclick="location.href='{% url 'transaction_history' userId %}'">View</button>
+        </div>
+        <div class="box">
+            <h2>Inventory</h2>
+            <i class="fas fa-warehouse"></i>
+            <p>Monitor and update stock levels.</p>
+            <button class="btn" onclick="location.href='{% url 'inventory' userId %}'">View</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.onload = function() {
+        // Get the low stock items info from the Django template
+        const lowStockInfo = {{ low_stock_info|safe }};
+        
+        if (lowStockInfo.length > 0) {
+            let alertMessage = "Warning! The following items have stock below 30:\n\n";
+            
+            // Append each item name and its stock to the alert message
+            for (let i = 0; i < lowStockInfo.length; i++) {
+                alertMessage += "- " + lowStockInfo[i].name + " (Current stock: " + lowStockInfo[i].stock + ")\n";
+            }
+            
+            alert(alertMessage);
+        }
+    };
+</script>
+
+</body>
+</html>

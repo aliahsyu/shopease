@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supplier Details</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #7267bd, #8374e3); /* Gradient with your main color */
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+        }
+
+        header {
+            background-color: #483D8B; /* Main color for the header */
+            padding: 20px 30px; /* More padding for better spacing */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 0 0 10px 10px; /* Rounded corners at the bottom */
+        }
+
+        .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #FFFFFF; /* White text for better contrast */
+        }
+
+        nav {
+            display: flex;
+            flex-grow: 1;
+            justify-content: center; /* Center the navigation items */
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 15px;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #FFFFFF; /* White text for better contrast */
+            padding: 8px 12px;
+            transition: background-color 0.3s, color 0.3s;
+            border-radius: 5px;
+        }
+
+        nav ul li a:hover {
+            background-color: #6A5ACD; /* Light Slate Blue on hover */
+            color: white; /* Text color on hover */
+        }
+
+        .logout {
+            margin-left: auto; /* Pushes the Logout link to the right */
+        }
+
+        .logout a {
+            background-color: #6A5ACD; /* Light Slate Blue for logout button */
+            color: white; /* White text color */
+            border: none; /* No border for a cleaner look */
+            padding: 10px 15px; /* Button padding */
+            border-radius: 8px; /* Rounded corners */
+            text-decoration: none; /* Remove underline */
+            font-weight: bold; /* Bold text */
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .logout a:hover {
+            background-color: #2e2a5c; /* Slightly darker on hover */
+            transform: scale(1.05); /* Slightly enlarge the button */
+        }
+
+        h2, h3 {
+            color: #FFFFFF;
+            margin-bottom: 20px;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+            width: 80%;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-container {
+            background-color: #e5e1e1;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            width: 80%;
+            margin: 20px 0;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        .form-container h3 {
+            color: #483D8B;
+            margin-bottom: 15px;
+        }
+
+        .form-container label {
+            display: block;
+            margin-bottom: 8px;
+            color: #483D8B;
+            font-weight: bold;
+        }
+
+        .form-container input[type="text"], .form-container input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #CCC;
+            font-size: 1em;
+        }
+
+        .form-container input[type="submit"] {
+            background-color: #6A5ACD;
+            color: #FFF;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .form-container input[type="submit"]:hover {
+            background-color: #2e2a5c;
+            transform: scale(1.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px; /* Add margin to separate from form */
+            border-radius: 8px; /* Rounded corners for the table */
+            overflow: hidden; 
+        }
+        table thead {
+            background-color: #483D8B; /* Header background color */
+            color: white; /* Header text color */
+        }
+
+        th, td {
+            padding: 12px; /* Add padding to table cells */
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2; /* Light gray for even rows */
+        }
+
+        tbody tr:hover {
+            background-color: #e0e0e0; /* Light gray on row hover */
+        }
+
+        .btn-update, .btn-delete {
+            padding: 5px 10px;
+            text-decoration: none;
+            color: white;
+            border-radius: 5px; /* Rounded corners */
+            font-weight: 600; /* Bold text */
+        }
+
+        .btn-update {
+            background-color: #4CAF50; /* Green for update button */
+            transition: background-color 0.3s;
+        }
+
+        .btn-delete {
+            background-color: #f44336; /* Red for delete button */
+            transition: background-color 0.3s;
+        }
+
+        .btn-update:hover {
+            background-color: #45a049; /* Darker green on hover */
+        }
+
+        .btn-delete:hover {
+            background-color: #d32f2f; /* Darker red on hover */
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header> 
+        <div class="logo">ShopEase</div>
+        <nav>
+            <ul class="d-flex justify-content-between">
+                <li><a href="{% url 'manager_homepage' manager_id %}">Home</a></li>
+                <li><a href="{% url 'staff_details' manager_id %}">Staff</a></li>
+                <li><a href="{% url 'item_details' manager_id %}">Item Details</a></li>
+                <li><a href="{% url 'supplier_details' manager_id %}">Supplier Details</a></li>
+                <li><a href="{% url 'generate_report' manager_id %}">Report</a></li>
+            </ul>
+        </nav>
+        <div class="logout">
+            <a href="{% url 'login' %}">Logout</a>
+        </div>
+    </header>
+
+    <h2>Supplier Details</h2>
+
+   <div class="content">
+    <div class="form-container">
+        <h3>Add New Supplier</h3>
+        <form method="POST" action="{% url 'supplier_details' manager_id %}">
+            {% csrf_token %}
+            <label for="supplier_id">Supplier ID:</label>
+            <input type="text" name="supplier_id" required>
+
+            <label for="supplier_name">Supplier Name:</label>
+            <input type="text" name="supplier_name" required>
+
+            <label for="supplier_phone_number">Supplier Phone Number:</label>
+            <input type="text" name="supplier_phone_number" required>
+
+            <label for="supplier_address">Supplier Address:</label>
+            <input type="text" name="supplier_address" required>
+
+            <input type="submit" value="Add Supplier">
+        </form>
+    </div>
+   </div> <!-- Form to add a new supplier -->
+
+
+    <!-- Table to display suppliers -->
+     <div class="content">
+        <div class="form-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Supplier ID</th>
+                        <th>Supplier Name</th>
+                        <th>Supplier Phone Number</th>
+                        <th>Supplier Address</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for supplier in suppliers %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ supplier.supplier_id }}</td>
+                        <td>{{ supplier.supplier_name }}</td>
+                        <td>{{ supplier.supplier_phone_number }}</td>
+                        <td>{{ supplier.supplier_address }}</td>
+                        <td>
+                            <a href="{% url 'update_supplier' supplier.supplier_id manager_id %}" class="btn btn-update">Update</a>
+                            <a href="{% url 'delete_supplier' supplier.supplier_id manager_id %}" class="btn btn-delete">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Report</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #7267bd, #8374e3);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+
+        header {
+            background-color: #483D8B;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            border-radius: 0 0 10px 10px;
+        }
+
+        .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #FFFFFF;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 15px;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #FFFFFF;
+            padding: 8px 12px;
+            transition: background-color 0.3s, color 0.3s;
+            border-radius: 5px;
+        }
+
+        nav ul li a:hover {
+            background-color: #6A5ACD;
+        }
+
+        .logout a {
+            background-color: #6A5ACD;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .logout a:hover {
+            background-color: #2e2a5c;
+            transform: scale(1.05);
+        }
+
+        .content {
+            margin: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        h1 {
+            color: #483D8B;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+
+        h2, h3 {
+            margin: 10px 0;
+            color: #7267bd;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #483D8B;
+            color: #FFFFFF;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #e0e0e0;
+        }
+
+        .total-sales {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #7267bd;
+            color: #fff;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 8px;
+        }
+
+        button {
+            background-color: #483D8B;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background-color: #6A5ACD;
+            transform: scale(1.05);
+        }
+
+        @media print {
+            header, .logout {
+                display: none;
+            }
+            .content {
+                margin: 0;
+                padding: 0;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            table {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">RevAura</div>
+    <nav>
+        <ul>
+            <li><a href="{% url 'manager_homepage' user_id %}">Home</a></li>
+            <li><a href="{% url 'staff_details' user_id %}">Staff</a></li>
+            <li><a href="{% url 'item_details' user_id %}">Item Details</a></li>
+            <li><a href="{% url 'supplier_details' user_id %}">Supplier Details</a></li>
+            <li><a href="{% url 'generate_report' user_id %}">Report</a></li>
+        </ul>
+    </nav>
+    <div class="logout">
+        <a href="{% url 'login' %}">Logout</a>
+    </div>
+</header>
+<div class="content">
+    <h1>Weekly Inventory Report</h1>
+    <h2>Report ID: {{ report.report_id }}</h2>
+    <h2>Total Sales for the Week: RM {{ report.total_value|floatformat:2 }}</h2>
+    <h3>Report Date: {{ report.report_date|date:"d M Y, h:i A" }}</h3>
+
+    <!-- Daily sales summary -->
+    <h2>Daily Sales Summary</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Total Sales (RM)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for day in daily_sales %}
+                <tr>
+                    <td>{{ day.date|date:"d M Y" }}</td>
+                    <td>RM {{ day.total_sales|floatformat:2 }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="2">No sales data available for this week.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Transaction details -->
+    <h2>Transaction Details</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Date & Time</th>
+                <th>Transaction ID</th>
+                <th>Item Name</th>
+                <th>Quantity</th>
+                <th>Price (RM)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction_item in transaction_items %}
+                <tr>
+                    <td>{{ transaction_item.transaction.transaction_date|date:"d M Y, h:i A" }}</td>
+                    <td>{{ transaction_item.transaction.transaction_id }}</td>
+                    <td>{{ transaction_item.item.item_name }}</td>
+                    <td>{{ transaction_item.quantity }}</td>
+                    <td>RM {{ transaction_item.item_price|floatformat:2 }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5">No transaction items available.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Fast Selling Products -->
+    <h2>Fast-Selling Products (Above 35 Sales)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Total Quantity Sold</th>
+                <th>Total Sales (RM)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in fast_selling_products %}
+                <tr>
+                    <td>{{ product.item__item_name }}</td>
+                    <td>{{ product.total_quantity }}</td>
+                    <td>RM {{ product.total_value|floatformat:2 }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3">No fast-selling products available.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Slow Selling Products -->
+    <h2>Slow-Selling Products (Below 10 Sales)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Total Quantity Sold</th>
+                <th>Total Sales (RM)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in slow_selling_products %}
+                <tr>
+                    <td>{{ product.item__item_name }}</td>
+                    <td>{{ product.total_quantity }}</td>
+                    <td>RM {{ product.total_value|floatformat:2 }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3">No slow-selling products available.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Print Button -->
+    <button onclick="window.print()">Print Report</button>
+</div>
+</body>
+</html>

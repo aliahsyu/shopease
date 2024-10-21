@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Supplier</title>
+</head>
+<body>
+    <h2>Update Supplier</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="supplier_name">Supplier Name:</label>
+        <input type="text" name="supplier_name" value="{{ supplier.supplier_name }}" required><br>
+        <label for="supplier_phone_number">Phone Number:</label>
+        <input type="text" name="supplier_phone_number" value="{{ supplier.supplier_phone_number }}" required><br>
+        <label for="supplier_address">Address:</label>
+        <input type="text" name="supplier_address" value="{{ supplier.supplier_address }}" required><br>
+        <button type="submit">Update Supplier</button>
+    </form>
+</body>
+</html>

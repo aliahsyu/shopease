@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #7267bd, #8374e3);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #483D8B;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 0 0 10px 10px;
+        }
+
+        .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #FFFFFF;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 15px;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #FFFFFF;
+            padding: 8px 12px;
+            transition: background-color 0.3s, color 0.3s;
+            border-radius: 5px;
+        }
+
+        nav ul li a:hover {
+            background-color: #6A5ACD;
+            color: white;
+        }
+
+        .logout a {
+            background-color: #6A5ACD;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .logout a:hover {
+            background-color: #2e2a5c;
+            transform: scale(1.05);
+        }
+
+        h1 {
+            text-align: center;
+            color: #483D8B;
+            margin-top: 20px;
+            font-size: 2em;
+        }
+
+        .content {
+            width: 80%;
+            margin: 20px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .transaction {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .transaction h3 {
+            margin: 0;
+            color: #483D8B;
+            font-size: 1.25em;
+        }
+
+        .transaction p, .items-list h4 {
+            margin: 10px 0;
+            color: #666;
+        }
+
+        .items-list ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .items-list li {
+            margin: 5px 0;
+            padding: 5px 10px;
+            background-color: #f4f4f9;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .total {
+            font-weight: bold;
+            color: green;
+            font-size: 1.2rem;
+        }
+
+        .cashier {
+            color: blue;
+            font-style: italic;
+        }
+
+        .payment-method {
+            font-weight: bold;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                width: 90%;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">ShopEase</div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'staff_homepage' staff_id%}">Home</a></li>
+                <li><a href="{% url 'record_items' staff_id%}">Record Items</a></li>
+                <li><a href="{% url 'transaction_history' staff_id%}">Transaction History</a></li>
+                <li><a href="{% url 'inventory' staff_id%}">Inventory</a></li>
+            </ul>
+        </nav>
+        <div class="logout">
+            <a href="{% url 'login' %}">Logout</a>
+        </div>
+    </header>
+
+    <h1>Transaction History</h1>
+
+    <div class="content">
+        {% if transactions %}
+            {% for transaction in transactions %}
+                <div class="transaction">
+                    <h3>Transaction ID: {{ transaction.transaction_id }}</h3>
+                    <p>Date: {{ transaction.transaction_date }}</p>
+                    <p class="cashier">Cashier: {{ transaction.user.staff_name }}</p>
+                    <p class="payment-method">Payment Method: {{ transaction.payment_method }}</p>
+                    <div class="items-list">
+                        <h4>Items:</h4>
+                        <ul>
+                            {% for item in transaction.transactionitem_set.all %}
+                                <li>{{ item.item.item_name }} x {{ item.quantity }} = RM {{ item.item_price|floatformat:2 }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <p class="total">Total Price: RM {{ transaction.transaction_price|floatformat:2 }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No transactions found for this staff member.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
